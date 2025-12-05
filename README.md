@@ -1,7 +1,7 @@
-<h1>Banking System </h1>
+<h1>Banking System Updated </h1>
 <h3>Overview</h3>
 
-<p>The Banking System is a console-based application developed in C++ that simulates real-world banking operations. It allows users to manage multiple types of bank accounts, including Savings, Current, Checking, and Trust accounts. Users can perform various operations such as opening accounts, depositing and withdrawing money, and viewing account details.</p>
+<p>The Banking System is a console-based application developed in C++ that simulates real-world banking operations. It allows users to manage multiple types of bank accounts, including Savings, Current, Checking, and Trust accounts. Users can perform various operations such as opening accounts, depositing and withdrawing money, log the transaction, view transaction history of different accounts and viewing account details.</p>
 
 <h3>Features</h3>
 
@@ -40,13 +40,14 @@ Run the compiled executable to start the banking system.</p>
 
 <p>Upon running the application, you'll be presented with a menu offering the following options:
 
-***********************
-* O: Open account     *
-* A: Display accounts *
-* D: Deposit money    *
-* W: Withdraw money   *
-* Q: Quit             *
-***********************
+****************************
+* O: Open account          *
+* A: Display accounts      *
+* D: Deposit money         *
+* H: Transaction history   *
+* W: Withdraw money        *
+* Q: Quit                  *
+****************************
 
 Opening an Account
 
@@ -56,7 +57,7 @@ Select the account type: Savings, Current, Checking, or Trust.
 
 Provide personal details such as name, age, and PAN number.
 
-Deposit a minimum of ₹1000 to activate the account.
+Deposit a minimum of ₹500 to activate the account.
 
 Displaying Accounts
 
@@ -71,6 +72,10 @@ Choose option D to deposit money.
 Select the account type and specify the amount.
 
 Choose whether to deposit into all accounts or a specific one.
+
+Transaction history
+
+choose option H to view transaction history
 
 Withdrawing Money
 
