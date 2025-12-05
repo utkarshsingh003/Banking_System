@@ -7,18 +7,12 @@ using namespace std;
 
 class Trust :public Account
 {
-	friend ostream& operator<<(ostream& os, const Trust& rhs);
-	friend istream& operator>>(istream& is, Trust& rhs);
-
 private:
-	string name;
-	int age;
-	string PAN;
-	double balance;
-	long int Acc_no;
 	int limits;
 public:
 	Trust();
-	bool deposit(double amount);
-	bool withdraw(double amount);
+	Trust(string n, int a, string P, double b);
+	virtual bool deposit(double amount);
+	virtual bool withdraw(double amount);
+	virtual void print(ostream& os) const override;
 };
