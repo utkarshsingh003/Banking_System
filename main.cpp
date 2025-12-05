@@ -74,43 +74,11 @@ int main()
         }
         else if (choice == 'D' || choice == 'd')
         {
-            cout << "Deposit to which account type? (S/C/K/T): ";
-            char type;
-            cin >> type;
-
-            if (type == 'S' || type == 's') 
-                deposit(acc);
-
-            else if (type == 'C' || type == 'c') 
-                deposit(acc);
-
-            else if (type == 'K' || type == 'k') 
-                deposit(acc);
-
-            else if (type == 'T' || type == 't') 
-                deposit(acc);
-
-            else cout << "Unknown type." << endl;
+            deposit(acc);
         }
         else if (choice == 'W' || choice == 'w')
         {
-            cout << "Withdraw from which account type? (S/C/K/T): ";
-            char type;
-            cin >> type;
-
-            if (type == 'S' || type == 's') 
-                withdraw(acc);
-
-            else if (type == 'C' || type == 'c') 
-                withdraw(acc);
-
-            else if (type == 'K' || type == 'k') 
-                withdraw(acc);
-
-            else if (type == 'T' || type == 't') 
-                withdraw(acc);
-
-            else cout << "Unknown type." << endl;
+            withdraw(acc);
         }
 
     } while (choice != 'Q' && choice != 'q');
