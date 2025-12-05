@@ -5,10 +5,11 @@
 #include "Trust.h"
 #include <iostream>
 #include <vector>
+#include <memory>
+#include <fstream>
 using namespace std;
 
-//For Savings
-void display(vector<Savings>& accounts)
+void display(unique_ptr<vector<shared_ptr<Account>>>& accounts)
 {
 	char n;
 	cout << "Do you want to display all accounts or one [A/O]: ";
@@ -18,34 +19,38 @@ void display(vector<Savings>& accounts)
 
 	if (n == 'A' || n == 'a')
 	{
-		for (const auto& acc : accounts)
-			cout << acc << endl;
+		for (const auto& acc : *accounts)
+			cout << *acc << endl;
 	}
 
 	else if (n == 'O' || n == 'o')
 	{
-		cout << "\nEnter the idex of the account you want to display: between (0 - "<<accounts.size()-1<<" )";
+		cout << "\nEnter the idex of the account you want to display: between (0 - "<<accounts->size()-1<<" )";
 		cin >> pos;
 
-		if (pos >= 0 && pos < accounts.size())
-			cout << accounts[pos] << endl;
+		if (pos >= 0 && pos < accounts->size())
+			cout << (*accounts)[pos] << endl;
 
 		else
 			cout << "\nInvalid input!" << endl;
 	}
 }
-void deposit(vector <Savings>& accounts, double amount)
+void deposit(unique_ptr<vector<shared_ptr<Account>>>& accounts)
 {
+	double amount{};
+	cout << "Enter the amount you want to deposit: ";
+	cin >> amount;
+
 	char n;
 	cout << "Do you want to deposit in all accounts or one [A/O]: ";
 	cin >> n;
 
 	if (n == 'A' || n == 'a')
 	{
-		for (auto& acc : accounts)
+		for (auto& acc : *accounts)
 		{
-			if (acc.deposit(amount, 6))
-				cout << "\nDeposited " << amount << " to " << acc << endl;
+			if (acc->deposit(amount))
+				cout << "\nDeposited " << amount << " to " << *acc << endl;
 
 			else
 				cout << "\nFailed to deposit!" << endl;
@@ -54,30 +59,34 @@ void deposit(vector <Savings>& accounts, double amount)
 	else if (n == 'O' || n == 'o')
 	{
 		int pos;
-		cout << "\nEnter the index of the account yo want to deposit from (0 - " << accounts.size() - 1 << " )";
+		cout << "\nEnter the index of the account yo want to deposit from (0 - " << accounts->size() - 1 << " )";
 		cin >> pos;
 
-		if (pos >= 0 && pos < accounts.size())
+		if (pos >= 0 && pos < accounts->size())
 		{
-			accounts[pos].deposit(amount, 6);
-			cout << "\nDeposited " << amount << " to " << accounts[pos] << endl;
+			(*accounts)[pos]->deposit(amount);
+			cout << "\nDeposited " << amount << " to " << (*accounts)[pos] << endl;
 		}
 	}
 	else
 		cout << "\nInvalid input!" << endl;
 }
-void withdraw(vector <Savings>& accounts, double amount)
+void withdraw(unique_ptr<vector<shared_ptr<Account>>>& accounts)
 {
+	double amount{};
+	cout << "Enter the amount you want to deposit: ";
+	cin >> amount;
+
 	char n;
 	cout << "Do you want to withdraw in all accounts or one [A/O]: ";
 	cin >> n;
 
 	if (n == 'A' || n == 'a')
 	{
-		for (auto& acc : accounts)
+		for (auto& acc : *accounts)
 		{
-			if (acc.withdraw(amount))
-				cout << "\nWithdrawn " << amount << " from " << acc << endl;
+			if (acc->withdraw(amount))
+				cout << "\nWithdrawn " << amount << " from " << *acc << endl;
 
 			else
 				cout << "\nFailed to withdraw!" << endl;
@@ -86,291 +95,78 @@ void withdraw(vector <Savings>& accounts, double amount)
 	else if (n == 'O' || n == 'o')
 	{
 		int pos;
-		cout << "\nEnter the index of the account yo want to withdraw from (0 - " << accounts.size() - 1 << " )";
+		cout << "\nEnter the index of the account yo want to withdraw from (0 - " << accounts->size() - 1 << " )";
 		cin >> pos;
 
-		if (pos >= 0 && pos < accounts.size())
+		if (pos >= 0 && pos < accounts->size())
 		{
-			accounts[pos].withdraw(amount);
-			cout << "\nWithdrawn " << amount << " from " << accounts[pos] << endl;
+			(*accounts)[pos]->withdraw(amount);
+			cout << "\nWithdrawn " << amount << " from " << (*accounts)[pos] << endl;
 		}
 	}
 	else
 		cout << "\nInvalid input!" << endl;
 }
-
-//for Current
-void display(vector <Current>& accounts)
+void history(unique_ptr<vector<shared_ptr<Account>>>& accounts)
 {
-	char n;
-	cout << "Do you want to display all accounts or one [A/O]: ";
-	cin >> n;
+	string output{};
 
-	int pos;
+	char choice{};
+	cout << "Which accounts transaction history do you want to see (S)avings/(C)urrent/Chec(K)ing/(T)rust";
+	cin >> choice;
 
-	if (n == 'A' || n == 'a')
+	if (choice == 'S' || choice == 's')
 	{
-		for (const auto& acc : accounts)
-			cout << acc << endl;
-	}
-
-	else if (n == 'O' || n == 'o')
-	{
-		cout << "\nEnter the idex of the account you want to display: between (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
-			cout << accounts[pos] << endl;
-
+		ifstream in_file{ "Savings.txt" };
+		if (!in_file)
+		{
+			cerr << "Can't open a file!" << endl;
+		}
 		else
-			cout << "\nInvalid input!" << endl;
-	}
-}
-void deposit(vector <Current>& accounts,double amount)
-{
-	char n;
-	cout << "Do you want to deposit in all accounts or one [A/O]: ";
-	cin >> n;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (auto& acc : accounts)
 		{
-			if (acc.deposit(amount))
-				cout << "\nDeposited " << amount << " to " << acc << endl;
-
-			else
-				cout << "\nFailed to deposit!" << endl;
+			while (getline(in_file, output))
+				cout << output << endl;
 		}
 	}
-	else if (n == 'O' || n == 'o')
+	else if (choice == 'C' || choice == 'c')
 	{
-		int pos;
-		cout << "\nEnter the index of the account yo want to deposit from (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
+		ifstream in_file{ "Current.txt" };
+		if (!in_file)
 		{
-			accounts[pos].deposit(amount);
-			cout << "\nDeposited " << amount << " to " << accounts[pos] << endl;
+			cerr << "Can't open a file!" << endl;
 		}
-	}
-	else
-		cout << "\nInvalid input!" << endl;
-}
-void withdraw(vector <Current>& accounts, double amount)
-{
-	char n;
-	cout << "Do you want to withdraw in all accounts or one [A/O]: ";
-	cin >> n;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (auto& acc : accounts)
-		{
-			if (acc.withdraw(amount))
-				cout << "\nWithdrawn " << amount << " from " << acc << endl;
-
-			else
-				cout << "\nFailed to withdraw!" << endl;
-		}
-	}
-	else if (n == 'O' || n == 'o')
-	{
-		int pos;
-		cout << "\nEnter the index of the account yo want to withdraw from (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
-		{
-			accounts[pos].withdraw(amount);
-			cout << "\nWithdrawn " << amount << " from " << accounts[pos] << endl;
-		}
-	}
-	else
-		cout << "\nInvalid input!" << endl;
-}
-
-//For Checking
-void display(vector <Checking>& accounts)
-{
-	char n;
-	cout << "Do you want to display all accounts or one [A/O]: ";
-	cin >> n;
-
-	int pos;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (const auto& acc : accounts)
-			cout << acc << endl;
-	}
-
-	else if (n == 'O' || n == 'o')
-	{
-		cout << "\nEnter the idex of the account you want to display: between (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
-			cout << accounts[pos] << endl;
-
 		else
-			cout << "\nInvalid input!" << endl;
-	}
-}
-void deposit(vector <Checking>& accounts, double amount)
-{
-	char n;
-	cout << "Do you want to deposit in all accounts or one [A/O]: ";
-	cin >> n;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (auto& acc : accounts)
 		{
-			if (acc.deposit(amount))
-				cout << "\nDeposited " << amount << " to " << acc << endl;
-
-			else
-				cout << "\nFailed to deposit!" << endl;
+			while (getline(in_file, output))
+				cout << output << endl;
 		}
 	}
-	else if (n == 'O' || n == 'o')
+	else if (choice == 'K' || choice == 'k')
 	{
-		int pos;
-		cout << "\nEnter the index of the account yo want to deposit from (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
+		ifstream in_file{ "Checking.txt" };
+		if (!in_file)
 		{
-			accounts[pos].deposit(amount);
-			cout << "\nDeposited " << amount << " to " << accounts[pos] << endl;
+			cerr << "Can't open a file!" << endl;
 		}
-	}
-	else
-		cout << "\nInvalid input!" << endl;
-}
-void withdraw(vector <Checking>& accounts, double amount)
-{
-	char n;
-	cout << "Do you want to withdraw in all accounts or one [A/O]: ";
-	cin >> n;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (auto& acc : accounts)
-		{
-			if (acc.withdraw(amount))
-				cout << "\nWithdrawn " << amount << " from " << acc << endl;
-
-			else
-				cout << "\nFailed to withdraw!" << endl;
-		}
-	}
-	else if (n == 'O' || n == 'o')
-	{
-		int pos;
-		cout << "\nEnter the index of the account yo want to withdraw from (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
-		{
-			accounts[pos].withdraw(amount);
-			cout << "\nWithdrawn " << amount << " from " << accounts[pos] << endl;
-		}
-	}
-	else
-		cout << "\nInvalid input!" << endl;
-}
-
-//for Trust
-void display(vector <Trust>& accounts)
-{
-	char n;
-	cout << "Do you want to display all accounts or one [A/O]: ";
-	cin >> n;
-
-	int pos;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (const auto& acc : accounts)
-			cout << acc << endl;
-	}
-
-	else if (n == 'O' || n == 'o')
-	{
-		cout << "\nEnter the idex of the account you want to display: between (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
-			cout << accounts[pos] << endl;
-
 		else
-			cout << "\nInvalid input!" << endl;
-	}
-}
-void deposit(vector <Trust>& accounts, double amount)
-{
-	char n;
-	cout << "Do you want to deposit in all accounts or one [A/O]: ";
-	cin >> n;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (auto& acc : accounts)
 		{
-			if (acc.deposit(amount))
-				cout << "\nDeposited " << amount << " to " << acc << endl;
-
-			else
-				cout << "\nFailed to deposit!" << endl;
+			while (getline(in_file, output))
+				cout << output << endl;
 		}
 	}
-	else if (n == 'O' || n == 'o')
+	else if (choice == 'T' || choice == 't')
 	{
-		int pos;
-		cout << "\nEnter the index of the account yo want to deposit from (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
+		ifstream in_file{ "Trust.txt" };
+		if (!in_file)
 		{
-			accounts[pos].deposit(amount);
-			cout << "\nDeposited " << amount << " to " << accounts[pos] << endl;
+			cerr << "Can't open a file!" << endl;
+		}
+		else
+		{
+			while (getline(in_file, output))
+				cout << output << endl;
 		}
 	}
 	else
-		cout << "\nInvalid input!" << endl;
-}
-void withdraw(vector <Trust>& accounts, double amount)
-{
-	char n;
-	cout << "Do you want to withdraw in all accounts or one [A/O]: ";
-	cin >> n;
-
-	if (n == 'A' || n == 'a')
-	{
-		for (auto& acc : accounts)
-		{
-			if (acc.withdraw(amount))
-				cout << "\nWithdrawn " << amount << " from " << acc << endl;
-
-			else
-				cout << "\nFailed to withdraw!" << endl;
-		}
-	}
-	else if (n == 'O' || n == 'o')
-	{
-		int pos;
-		cout << "\nEnter the index of the account yo want to withdraw from (0 - " << accounts.size() - 1 << " )";
-		cin >> pos;
-
-		if (pos >= 0 && pos < accounts.size())
-		{
-			accounts[pos].withdraw(amount);
-			cout << "\nWithdrawn " << amount << " from " << accounts[pos] << endl;
-		}
-	}
-	else
-		cout << "\nInvalid input!" << endl;
+		cout << "Invalid accout to see history!" << endl;
 }
