@@ -15,11 +15,7 @@ Trust::Trust()
 	Acc_no = rand() % 100000 + 1;
 }
 Trust::Trust(string n, int a, string P, double b)
-	:Account{ n,a,P,b }, limits{ 0 }
-{
-	srand(static_cast<unsigned int>(time(0)));
-	Acc_no = rand() % 100000 + 1;
-}
+	:Account{ n,a,P,b }, limits{ 0 } {}
 bool Trust::deposit(double amount)
 {
 	ofstream out_file{ "Trust.txt",ios::app };
@@ -38,7 +34,7 @@ bool Trust::deposit(double amount)
 			oss << "Name: " << name
 				<< "\nAge: " << age
 				<< "\nPAN: " << PAN
-				<< "\nWithdrawn: " << amount
+				<< "\nDeposited: " << amount
 				<< "\nBalance: " << balance
 				<< "\nAccount no.: " << Acc_no << endl;
 
@@ -52,7 +48,18 @@ bool Trust::deposit(double amount)
 	else
 	{
 		if (Account::deposit(amount))
+		{
+			oss << "Name: " << name
+				<< "\nAge: " << age
+				<< "\nPAN: " << PAN
+				<< "\nDeposited: " << amount
+				<< "\nBalance: " << balance
+				<< "\nAccount no.: " << Acc_no << endl;
+
+			out_file << oss.str();
+
 			return true;
+		}
 		else
 			return false;
 	}
@@ -68,7 +75,7 @@ bool Trust::withdraw(double amount)
 	}
 	ostringstream oss{};
 
-	while (limits < 3)
+	if (limits < 3)
 	{
 		if (Account::withdraw(amount))
 		{
