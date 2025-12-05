@@ -3,123 +3,96 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <fstream>
+#include <sstream>
+
 using namespace std;
 
-ostream& operator<<(ostream& os, const Trust& rhs)
-{
-	os << "[Account holder's name: " << rhs.name << " Age: " << rhs.age << " PAN no: " << rhs.PAN << " Account no: " << rhs.Acc_no << " Balance: " << rhs.balance << " ]";
-	return os;
-}
-istream& operator>>(istream& is, Trust& rhs)
-{
-	char n{};
-	bool valid{ true };
-
-	cout << "Enter Your name: ";
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	getline(is, rhs.name);
-
-	cout << "\nEnter your age: ";
-	is >> rhs.age;
-	if (rhs.age < 18 )
-	{
-		cout << "You cant open a trust account" << endl;
-		valid = false;
-		return is;
-	}
-
-
-	cout << "\nDo you have a PAN card [Y/N] ";
-	is >> n;
-
-	if (n == 'Y' || n == 'y')
-	{
-		cout << "Enter your PAN number:";
-		is >> rhs.PAN;
-	}
-
-	else
-	{
-		cout << "\nYou cant open a trust account" << endl;
-		valid = false;
-		return is;
-	}
-
-	cout << "\nDeposit atleast 500$ to open account ";
-	is >> rhs.balance;
-
-	if (rhs.balance < 500)
-	{
-		cout << "\nYou cant open a trust account" << endl;
-		valid = false;
-		return is;
-	}
-	if (valid == true)
-		cout << "Account opened successfully!" << endl;
-
-	return is;
-}
-
-
 Trust::Trust()
-	:name{ "None" }, age{ 0 }, PAN{ "None" }, balance{ 0.0 }, limits{ 0 }
+	:Account(), limits{0} 
+{
+	srand(time(0));
+	Acc_no = rand() % 100000 + 1;
+}
+Trust::Trust(string n, int a, string P, double b)
+	:Account{ n,a,P,b }, limits{ 0 }
 {
 	srand(static_cast<unsigned int>(time(0)));
 	Acc_no = rand() % 100000 + 1;
 }
 bool Trust::deposit(double amount)
 {
-	long int acc{};
-	cout << "Enter your account number: ";
+	ofstream out_file{ "Trust.txt",ios::app };
+	if (!out_file)
+	{
+		cerr << "Can't open a file!" << endl;
+		return false;
+	}
+	ostringstream oss{};
 
+	if (amount >= 5000)
+	{
+		amount += 50;
+		if (Account::deposit(amount))
+		{
+			oss << "Name: " << name
+				<< "\nAge: " << age
+				<< "\nPAN: " << PAN
+				<< "\nWithdrawn: " << amount
+				<< "\nBalance: " << balance
+				<< "\nAccount no.: " << Acc_no << endl;
 
-	if (acc != Acc_no)
-		cout << "Sorry Account number doesn't match!" << endl;
+			out_file << oss.str();
 
+			return true;
+		}
+		else
+			return false;
+	}
 	else
 	{
-		if (amount <= 0)
-			return false;
-
-		else if (amount >= 5000)
-		{
-			amount += 50;
-			balance += amount;
+		if (Account::deposit(amount))
 			return true;
-		}
-
 		else
-		{
-			balance += amount;
-			return true;
-		}
+			return false;
 	}
 }
 
 bool Trust::withdraw(double amount)
 {
-	long int acc{};
-	cout << "Enter your account number: ";
-	cin >> acc;
-
-	if (acc != Acc_no)
-		cout << "Sorry Account number doesn't match!" << endl;
-
-	else
+	ofstream out_file{ "Trust.txt",ios::app };
+	if (!out_file)
 	{
-		while (limits <= 3)
-		{
-			if (amount <= 0)
-				return false;
-
-			else
-			{
-				balance += amount;
-				limits += 1;
-				return true;
-			}
-		}
+		cerr << "Can't open a file!" << endl;
 		return false;
 	}
+	ostringstream oss{};
+
+	while (limits < 3)
+	{
+		if (Account::withdraw(amount))
+		{
+			limits++;
+
+			oss << "\nName: " << name
+				<< "\nAge: " << age
+				<< "\nPAN: " << PAN
+				<< "\nWithdrawn: " << amount
+				<< "\nBalance: " << balance
+				<< "\nAccount no.: " << Acc_no << endl;
+
+			out_file << oss.str();
+
+			return true;
+		}
+		else
+			return false;
+	}
+}
+void Trust::print(ostream& os) const
+{
+	os << "[Account holder's name: " << name << " Age: " 
+		<< age << " PAN no: " << PAN << " Account no: " 
+		<< Acc_no << " Balance: " << balance << " withdrawal limit: " << limits << " ]";
 }
 
