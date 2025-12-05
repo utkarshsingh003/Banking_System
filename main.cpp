@@ -66,23 +66,7 @@ int main()
         }
         else if (choice == 'A' || choice == 'a')
         {
-            cout << "Display which account type? (S/C/K/T): ";
-            char type;
-            cin >> type;
-
-            if (type == 'S' || type == 's') 
-                display(acc);
-
-            else if (type == 'C' || type == 'c') 
-                display(acc);
-
-            else if (type == 'K' || type == 'k') 
-                display(acc);
-
-            else if (type == 'T' || type == 't') 
-                display(acc);
-
-            else cout << "Unknown type." << endl;
+            display(acc);
         }
         else if (choice == 'H' || choice == 'h')
         {
