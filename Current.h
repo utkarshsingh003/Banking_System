@@ -6,19 +6,13 @@ using namespace std;
 
 class Current :public Account
 {
-	friend ostream& operator<<(ostream& os, const Current& rhs);
-	friend istream& operator>>(istream& is, Current& rhs);
-
 private:
-	string name;
-	int age;
-	string PAN;
-	double balance;
-	long int Acc_no;
 	int limits;
 
 public:
 	Current();
-	bool deposit(double amount);
-	bool withdraw(double amount);
+	Current(string n, int a, string P, double b);
+	virtual bool deposit(double amount);
+	virtual bool withdraw(double amount);
+	virtual void print(ostream& os) const override;
 };
