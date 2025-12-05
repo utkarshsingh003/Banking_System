@@ -6,19 +6,13 @@ using namespace std;
 
 class Savings :public Account
 {
-	friend ostream& operator<<(ostream& os, const Savings& rhs);
-	friend istream& operator>>(istream& is, Savings& rhs);
-
 private:
-	string name;
-	int age;
-	string PAN;
-	double balance;
-	long int Acc_no;
 	double int_rate;
 
 public:
 	Savings();
-	bool deposit(double amount, double i);
-	bool withdraw(double amount);
+	Savings(string n, int a, string P, double b);
+	virtual bool deposit(double amount);
+	virtual bool withdraw(double amount);
 };
+
