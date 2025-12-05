@@ -14,11 +14,7 @@ Checking::Checking()
 	Acc_no = rand() % 100000 + 1;
 }
 Checking::Checking(string n, int a, string P, double b)
-	:Account{ n,a,P,b }
-{
-	srand(static_cast<unsigned int>(time(0)));
-	Acc_no = rand() % 100000 + 1;
-}
+	:Account{ n,a,P,b } {}
 bool Checking::deposit(double amount)
 {
 	ofstream out_file{ "Checking.txt",ios::app };
