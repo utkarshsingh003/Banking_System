@@ -15,11 +15,7 @@ Current::Current()
 	Acc_no = rand() % 100000 + 1;
 }
 Current::Current(string n, int a, string P, double b)
-	:Account{ n,a,P,b }, limits{ 0 }
-{
-	srand(static_cast<unsigned int>(time(0)));
-	Acc_no = rand() % 100000 + 1;
-}
+	:Account{ n,a,P,b }, limits{ 0 } {}
 bool Current::deposit(double amount)
 {
 	ofstream out_file{ "Current.txt",ios::app };
@@ -30,7 +26,7 @@ bool Current::deposit(double amount)
 	}
 	ostringstream oss{};
 
-	if (Account::withdraw(amount))
+	if (Account::deposit(amount))
 	{
 		oss << "Name: " << name
 			<< "\nAge: " << age
@@ -58,7 +54,7 @@ bool Current::withdraw(double amount)
 	}
 	ostringstream oss{};
 
-	while(limits < 10)
+	if(limits < 10)
 	{
 		if (Account::withdraw(amount))
 		{
@@ -68,7 +64,7 @@ bool Current::withdraw(double amount)
 				<< "\nAge: " << age
 				<< "\nPAN: " << PAN
 				<< "\nWithdrawal limit" << limits
-				<< "\nDeposted: " << amount
+				<< "\nWithdrawn: " << amount
 				<< "\nBalance: " << balance
 				<< "\nAccount no.: " << Acc_no << endl;
 
