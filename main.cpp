@@ -6,26 +6,25 @@
 #include "Functions.h"
 #include <iostream>
 #include <vector>
+#include <memory>
 using namespace std;
 
 int main()
 {
-    vector<Savings> savings_accounts;
-    vector<Current> current_accounts;
-    vector<Checking> checking_accounts;
-    vector<Trust> trust_accounts;
+    auto acc = make_unique<vector<shared_ptr<Account>>>();
 
     char choice{};
 
     do
     {
-        cout << "\n***********************" << endl;
-        cout << "* O: Open account     *" << endl;
-        cout << "* A: Display accounts *" << endl;
-        cout << "* D: deposit money    *" << endl;
-        cout << "* W: Withdraw money   *" << endl;
-        cout << "* Q: Quit             *" << endl;
-        cout << "***********************" << endl;
+        cout << "\n*****************************" << endl;
+        cout << "* O: Open account           *" << endl;
+        cout << "* A: Display accounts       *" << endl;
+        cout << "* D: deposit money          *" << endl;
+        cout << "* W: Withdraw money         *" << endl;
+        cout << "* H: Transaction History    *" << endl;
+        cout << "* Q: Quit                   *" << endl;
+        cout << "*****************************" << endl;
         cout << "\nEnter your choice: ";
         cin >> choice;
 
@@ -40,25 +39,25 @@ int main()
             {
                 Savings s;
                 cin >> s;
-                savings_accounts.push_back(s);
+                acc->push_back(make_shared<Savings>(s));
             }
             else if (n == 'C' || n == 'c')
             {
                 Current c;
                 cin >> c;
-                current_accounts.push_back(c);
+                acc->push_back(make_shared<Current>(c));
             }
             else if (n == 'K' || n == 'k')
             {
                 Checking k;
                 cin >> k;
-                checking_accounts.push_back(k);
+                acc->push_back(make_shared<Checking>(k));
             }
             else if (n == 'T' || n == 't')
             {
                 Trust t;
                 cin >> t;
-                trust_accounts.push_back(t);
+                acc->push_back(make_shared<Trust>(t));
             }
             else
             {
@@ -72,18 +71,22 @@ int main()
             cin >> type;
 
             if (type == 'S' || type == 's') 
-                display(savings_accounts);
+                display(acc);
 
             else if (type == 'C' || type == 'c') 
-                display(current_accounts);
+                display(acc);
 
             else if (type == 'K' || type == 'k') 
-                display(checking_accounts);
+                display(acc);
 
             else if (type == 'T' || type == 't') 
-                display(trust_accounts);
+                display(acc);
 
             else cout << "Unknown type." << endl;
+        }
+        else if (choice == 'H' || choice == 'h')
+        {
+            history(acc);
         }
         else if (choice == 'D' || choice == 'd')
         {
@@ -91,21 +94,17 @@ int main()
             char type;
             cin >> type;
 
-            double amount;
-            cout << "Enter amount: ";
-            cin >> amount;
-
             if (type == 'S' || type == 's') 
-                deposit(savings_accounts, amount);
+                deposit(acc);
 
             else if (type == 'C' || type == 'c') 
-                deposit(current_accounts, amount);
+                deposit(acc);
 
             else if (type == 'K' || type == 'k') 
-                deposit(checking_accounts, amount);
+                deposit(acc);
 
             else if (type == 'T' || type == 't') 
-                deposit(trust_accounts, amount);
+                deposit(acc);
 
             else cout << "Unknown type." << endl;
         }
@@ -115,21 +114,17 @@ int main()
             char type;
             cin >> type;
 
-            double amount;
-            cout << "Enter amount: ";
-            cin >> amount;
-
             if (type == 'S' || type == 's') 
-                withdraw(savings_accounts, amount);
+                withdraw(acc);
 
             else if (type == 'C' || type == 'c') 
-                withdraw(current_accounts, amount);
+                withdraw(acc);
 
             else if (type == 'K' || type == 'k') 
-                withdraw(checking_accounts, amount);
+                withdraw(acc);
 
             else if (type == 'T' || type == 't') 
-                withdraw(trust_accounts, amount);
+                withdraw(acc);
 
             else cout << "Unknown type." << endl;
         }
