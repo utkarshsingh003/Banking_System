@@ -16,11 +16,7 @@ Savings::Savings()
 	Acc_no = rand() % 100000 + 1;
 }
 Savings::Savings(string n, int a, string P, double b)
-	:Account{ n,a,P,b },int_rate{0.06}
-{
-	srand(static_cast<unsigned int>(time(0)));
-	Acc_no = rand() % 100000 + 1;
-}
+	:Account{ n,a,P,b },int_rate{0.06} {}
 bool Savings::deposit(double amount)
 {
 	ofstream out_file{ "Savings.txt",ios::app };
@@ -38,7 +34,7 @@ bool Savings::deposit(double amount)
 			<< "\nAge: " << age
 			<< "\nPAN: " << PAN
 			<< "Interest rate: " << int_rate
-			<< "\nWithdrawn: " << amount
+			<< "\nDeposited: " << amount
 			<< "\nBalance: " << balance
 			<< "\nAccount no.: " << Acc_no << endl;
 
